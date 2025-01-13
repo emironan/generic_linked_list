@@ -47,18 +47,16 @@ LDFLAGS = $(DEP_LIBS) $(RPATH)
 LDFLAGS_PROFILING = $(DEP_LIBS) $(RPATH) -pg
 
 ########## LINKER FLAGS END ##########
-all: $(TARGET)
-
-test: $(TEST_TARGET)
-
-$(TEST_TARGET): $(TARGET) $(TEST_OBJ)
-	$(LD) $(LDFLAGS) $^ -o $@
-
-$(TARGET):
+all: 
 	$(MAKE) -C $(SRC_DIR)/$(MODULE_NAME)
 
-$(TEST_OBJ):
+test: 
+	$(MAKE) -C $(SRC_DIR)/$(MODULE_NAME)
 	$(MAKE) -C $(SRC_DIR)/$(TEST_NAME)
+	$(LD) $(LDFLAGS) $(TARGET) $(TEST_OBJ) -o $(TEST_TARGET)
+
+run: $(TEST_TARGET)
+	$(TEST_TARGET)
 
 build_dir:
 	mkdir -p $(PROJ_ROOT_DIR)/bin
@@ -74,6 +72,6 @@ clean:
 	$(call makeallmodules, clean)
 	rm -rf bin/test/test
 
-.phony: all test build_dir clean
+.phony: all test run build_dir build_dependencies clean
 
 
