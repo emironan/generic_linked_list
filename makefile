@@ -55,7 +55,13 @@ test:
 	$(MAKE) -C $(SRC_DIR)/$(TEST_NAME)
 	$(LD) $(LDFLAGS) $(TARGET) $(TEST_OBJ) -o $(TEST_TARGET)
 
-run: $(TEST_TARGET)
+build_and_run:
+	$(MAKE) test
+	$(MAKE) run
+	
+
+run:
+	@echo "\nRunning the test\n"
 	$(TEST_TARGET)
 
 build_dir:
