@@ -10,8 +10,6 @@
 #ifndef LINKED_LIST_H
 #define LINKED_LIST_H
 
-#include <stdlib.h>
-
 typedef struct st_node_t* linked_list_t;
 
 typedef enum e_linked_list_errors_t
@@ -46,9 +44,9 @@ void ll_delete_linked_list(linked_list_t list);
  * @return [linked_list_errors_t] returns LL_ERROR_ALLOCATION if can't take
  * memory from OS. Otherwise returns LL_ERROR_NONE
  */
-linked_list_errors_t ll_add_to_end(linked_list_t list,
-                                   void* data,
-                                   size_t data_size);
+linked_list_errors_t ll_add_tail(linked_list_t list,
+                                 void* data,
+                                 size_t data_size);
 
 /*****************************************************************************/
 /**
@@ -59,9 +57,9 @@ linked_list_errors_t ll_add_to_end(linked_list_t list,
  * @return [linked_list_errors_t] returns LL_ERROR_ALLOCATION if can't take
  * memory from OS. Otherwise returns LL_ERROR_NONE
  */
-linked_list_errors_t ll_add_to_beginning(linked_list_t list,
-                                         void* data,
-                                         size_t data_size);
+linked_list_errors_t ll_add_head(linked_list_t list,
+                                 void* data,
+                                 size_t data_size);
 
 /*****************************************************************************/
 /**
@@ -71,9 +69,9 @@ linked_list_errors_t ll_add_to_beginning(linked_list_t list,
  * @return [linked_list_errors_t] returns LL_ERROR_LIST_ALREADY_EMPTY if the
  * list is already empty, otherwise returns LL_ERROR_NONE
  */
-linked_list_errors_t ll_pop_from_end(linked_list_t list, 
-                                     void* data,
-                                     size_t data_size);
+linked_list_errors_t ll_pop_tail(linked_list_t list, 
+                                 void* data,
+                                 size_t data_size);
 
 /*****************************************************************************/
 /**
@@ -83,9 +81,9 @@ linked_list_errors_t ll_pop_from_end(linked_list_t list,
  * @return [linked_list_errors_t] returns LL_ERROR_LIST_ALREADY_EMPTY if the
  * list is already empty, otherwise returns LL_ERROR_NONE
  */
-linked_list_errors_t ll_pop_from_beginning(linked_list_t list, 
-                                           void* data,
-                                           size_t data_size);
+linked_list_errors_t ll_pop_head(linked_list_t list, 
+                                 void* data,
+                                 size_t data_size);
 
 /*****************************************************************************/
 /**
@@ -95,9 +93,9 @@ linked_list_errors_t ll_pop_from_beginning(linked_list_t list,
  * @return [linked_list_errors_t] returns LL_ERROR_LIST_ALREADY_EMPTY if the
  * list is already empty, otherwise returns LL_ERROR_NONE
  */
-linked_list_errors_t ll_get_from_end(linked_list_t list, 
-                                     void* data,
-                                     size_t data_size);
+linked_list_errors_t ll_get_tail(linked_list_t list, 
+                                 void* data,
+                                 size_t data_size);
 
 /*****************************************************************************/
 /**
@@ -107,9 +105,9 @@ linked_list_errors_t ll_get_from_end(linked_list_t list,
  * @return [linked_list_errors_t] returns LL_ERROR_LIST_ALREADY_EMPTY if the
  * list is already empty, otherwise returns LL_ERROR_NONE
  */
-linked_list_errors_t ll_get_from_beginning(linked_list_t list, 
-                                           void* data,
-                                           size_t data_size);
+linked_list_errors_t ll_get_head(linked_list_t list, 
+                                 void* data,
+                                 size_t data_size);
 
 /*****************************************************************************/
 /**
@@ -129,11 +127,14 @@ linked_list_errors_t ll_get_item_with_index(linked_list_t list,
 
 /*****************************************************************************/
 /**
- * @brief returns index of the data in the list, that is equal to given data 
+ * @brief returns index of the data in the list, that is equal to given data,
+ * it only returns the index of first matching data, so it is user's
+ * responsibility to use unique data with it. 
  * @param[in] list [linked_list_t] the list to operator upon
  * @param[in] print_function [void (is_equal)(void* data1, void* data2))] 
  * function that checks equality. if two data are same, it must return 0
- * @return [int] index of found element in list
+ * @return [int] index of found element in list, return -1 if data doesn't
+ * exist in the list
  */
 int ll_get_index_of_eq_data(linked_list_t list,
                             void* data,
@@ -146,7 +147,7 @@ int ll_get_index_of_eq_data(linked_list_t list,
  * @return [linked_list_errors_t] returns LL_ERROR_LIST_ALREADY_EMPTY if the
  * list is already empty, otherwise returns LL_ERROR_NONE
  */
-linked_list_errors_t ll_remove_from_end(linked_list_t list);
+linked_list_errors_t ll_remove_tail(linked_list_t list);
 
 /*****************************************************************************/
 /**
@@ -155,7 +156,7 @@ linked_list_errors_t ll_remove_from_end(linked_list_t list);
  * @return [linked_list_errors_t] returns LL_ERROR_LIST_ALREADY_EMPTY if the
  * list is already empty, otherwise returns LL_ERROR_NONE
  */
-linked_list_errors_t ll_remove_from_beginning(linked_list_t list);
+linked_list_errors_t ll_remove_head(linked_list_t list);
 
 /*****************************************************************************/
 /**

@@ -7,7 +7,6 @@
  * Version: 1
  *****************************************************************************/
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "linked_list.h"
@@ -27,7 +26,7 @@ struct st_node_t
  * @param[in] node [node_t] the node to be removed
  * @return [void]
  */
-static void remove_end_node(node_t node);
+static void remove_tail(node_t node);
 
 /*****************************************************************************/
 /**
@@ -37,7 +36,7 @@ static void remove_end_node(node_t node);
  * @return [linked_list_errors_t] returns LL_ERROR_LIST_ALREADY_EMPTY if the
  * list is already empty, otherwise returns LL_ERROR_NONE
  */
-static linked_list_errors_t get_last_node(linked_list_t list, node_t* node);
+static linked_list_errors_t get_tail(linked_list_t list, node_t* node);
 
 /*****************************************************************************/
 linked_list_t ll_create_linked_list(void)
@@ -60,6 +59,7 @@ void ll_delete_linked_list(linked_list_t list)
     while(list->next != NULL)
     {
         node_holder = list->next;
+        list->next = NULL;
         free(list->data);
         free(list);
         list = node_holder;
@@ -68,9 +68,9 @@ void ll_delete_linked_list(linked_list_t list)
 }
 
 /*****************************************************************************/
-linked_list_errors_t ll_add_to_end(linked_list_t list,
-                                   void* data,
-                                   size_t data_size)
+linked_list_errors_t ll_add_tail(linked_list_t list,
+                                 void* data,
+                                 size_t data_size)
 {
     while(list->next != NULL)
     {
@@ -100,9 +100,9 @@ linked_list_errors_t ll_add_to_end(linked_list_t list,
 }
 
 /*****************************************************************************/
-linked_list_errors_t ll_add_to_beginning(linked_list_t list,
-                                         void* data,
-                                         size_t data_size)
+linked_list_errors_t ll_add_head(linked_list_t list,
+                                 void* data,
+                                 size_t data_size)
 {
     node_t node = malloc(sizeof(struct st_node_t));
 
@@ -127,40 +127,40 @@ linked_list_errors_t ll_add_to_beginning(linked_list_t list,
 }
 
 /*****************************************************************************/
-linked_list_errors_t ll_pop_from_end(linked_list_t list, 
-                                     void* data,
-                                     size_t data_size)
+linked_list_errors_t ll_pop_tail(linked_list_t list, 
+                                 void* data,
+                                 size_t data_size)
 {
-    if(ll_get_from_end(list, data, data_size) == LL_ERROR_LIST_ALREADY_EMPTY)
+    if(ll_get_tail(list, data, data_size) == LL_ERROR_LIST_ALREADY_EMPTY)
     {
         return LL_ERROR_LIST_ALREADY_EMPTY;
     }
-    remove_end_node(list);
+    ll_remove_tail(list);
 
     return LL_ERROR_NONE;
 }
 
 /*****************************************************************************/
-linked_list_errors_t ll_pop_from_beginning(linked_list_t list, 
-                                           void* data,
-                                           size_t data_size)
+linked_list_errors_t ll_pop_head(linked_list_t list, 
+                                 void* data,
+                                 size_t data_size)
 {
-    if(ll_get_from_beginning(list, data, data_size) == LL_ERROR_LIST_ALREADY_EMPTY)
+    if(ll_get_head(list, data, data_size) == LL_ERROR_LIST_ALREADY_EMPTY)
     {
         return LL_ERROR_LIST_ALREADY_EMPTY;
     }
 
-    ll_remove_from_beginning(list);
+    ll_remove_head(list);
 
     return LL_ERROR_NONE;
 }
 
 /*****************************************************************************/
-linked_list_errors_t ll_get_from_end(linked_list_t list, 
-                                     void* data,
-                                     size_t data_size)
+linked_list_errors_t ll_get_tail(linked_list_t list, 
+                                 void* data,
+                                 size_t data_size)
 {
-    if(get_last_node(list, &list) == LL_ERROR_LIST_ALREADY_EMPTY)
+    if(get_tail(list, &list) == LL_ERROR_LIST_ALREADY_EMPTY)
     {
         return LL_ERROR_LIST_ALREADY_EMPTY;
     }
@@ -171,9 +171,9 @@ linked_list_errors_t ll_get_from_end(linked_list_t list,
 }
 
 /*****************************************************************************/
-linked_list_errors_t ll_get_from_beginning(linked_list_t list, 
-                                           void* data,
-                                           size_t data_size)
+linked_list_errors_t ll_get_head(linked_list_t list, 
+                                 void* data,
+                                 size_t data_size)
 {
     if(list->next == NULL)
     {
@@ -247,19 +247,19 @@ int ll_get_index_of_eq_data(linked_list_t list,
 }
 
 /*****************************************************************************/
-linked_list_errors_t ll_remove_from_end(linked_list_t list)
+linked_list_errors_t ll_remove_tail(linked_list_t list)
 {
-    if(get_last_node(list, &list) == LL_ERROR_LIST_ALREADY_EMPTY)
+    if(get_tail(list, &list) == LL_ERROR_LIST_ALREADY_EMPTY)
     {
         return LL_ERROR_LIST_ALREADY_EMPTY;
     }
 
-    remove_end_node(list);
+    remove_tail(list);
     return LL_ERROR_NONE;
 }
 
 /*****************************************************************************/
-linked_list_errors_t ll_remove_from_beginning(linked_list_t list)
+linked_list_errors_t ll_remove_head(linked_list_t list)
 {
     // will hold the next value of a free'd node
     node_t node;
@@ -315,7 +315,7 @@ linked_list_errors_t ll_remove_with_index(linked_list_t list, int index)
     }
     else
     {
-        ll_remove_from_beginning(list);
+        ll_remove_head(list);
     }
 
     return LL_ERROR_NONE;
@@ -349,7 +349,7 @@ void ll_print_all_list(linked_list_t list, void (print_function)(void *))
 }
 
 /*****************************************************************************/
-static void remove_end_node(node_t node)
+static void remove_tail(node_t node)
 {
     free(node->next);
     free(node->data);
@@ -357,7 +357,7 @@ static void remove_end_node(node_t node)
 }
 
 /*****************************************************************************/
-static linked_list_errors_t get_last_node(linked_list_t list, node_t* node)
+static linked_list_errors_t get_tail(linked_list_t list, node_t* node)
 {
     *node = list;
 

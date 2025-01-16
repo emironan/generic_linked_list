@@ -33,8 +33,11 @@ endef
 LD:= gcc
 
 ########## LINKER FLAGS ##########
+#LIBRARY_DIR= /usr/lib/x86_64-linux-gnu/
+DEP_LIBS = -lcheck -lsubunit -pthread -lrt -lm
 
-#DEP_LIBS = -L$(LIBRARY_DIR) -lemp
+									
+#DEP_LIBS = -lcheck
 
 # RPATH IS USED FOR LINKING USER DEFINED LIBS IN SPECIFIC PATH DURING
 # BUILDING THE MODULE.It is needed for the User of the .so. \
@@ -53,7 +56,7 @@ all:
 test: 
 	$(MAKE) -C $(SRC_DIR)/$(MODULE_NAME)
 	$(MAKE) -C $(SRC_DIR)/$(TEST_NAME)
-	$(LD) $(LDFLAGS) $(TARGET) $(TEST_OBJ) -o $(TEST_TARGET)
+	$(LD) $(TARGET) $(TEST_OBJ) $(LDFLAGS) -o $(TEST_TARGET)
 
 build_and_run:
 	$(MAKE) test
@@ -74,10 +77,13 @@ build_dir:
 build_dependencies:
 	$(call makeallmodules, build_dependencies)
 
+mem_check:
+	valgrind --leak-check=full --show-leak-kinds=all ./bin/test/test
+
 clean:
 	$(call makeallmodules, clean)
 	rm -rf bin/test/test
 
-.phony: all test run build_dir build_dependencies clean
+.phony: all test run build_dir build_dependencies mem_check clean
 
 
