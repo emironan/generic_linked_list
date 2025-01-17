@@ -72,6 +72,7 @@ build_dir:
 	mkdir -p $(PROJ_ROOT_DIR)/src
 	mkdir -p $(PROJ_ROOT_DIR)/include
 	mkdir -p $(PROJ_ROOT_DIR)/obj
+	mkdir -p $(TEST_TARGET_DIR)
 	$(call makeallmodules, build_dir)
 
 build_dependencies:
