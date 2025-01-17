@@ -81,10 +81,15 @@ build_dependencies:
 mem_check:
 	valgrind --leak-check=full --show-leak-kinds=all ./bin/test/test
 
+install:
+	@echo Installing liblinked_list:
+	cp $(TARGET) /usr/local/lib
+	cp $(PROJ_ROOT_DIR)/include/$(MODULE_NAME)/$(MODULE_NAME).h /usr/local/include
+
 clean:
 	$(call makeallmodules, clean)
 	rm -rf bin/test/test
 
-.phony: all test run build_dir build_dependencies mem_check clean
+.phony: all test run build_dir build_dependencies mem_check install clean
 
 
