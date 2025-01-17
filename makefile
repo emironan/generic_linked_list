@@ -13,8 +13,8 @@ MODULE_NAME:=linked_list
 TEST_NAME:=test
 TEST_OBJ_NAME:=main.o
 
-TARGET_DIR:=$(PROJ_ROOT_DIR)/obj/$(MODULE_NAME)
-TARGET:=$(TARGET_DIR)/$(MODULE_NAME).o
+TARGET_DIR:=$(PROJ_ROOT_DIR)/libs
+TARGET:=$(TARGET_DIR)/lib$(MODULE_NAME).a
 
 TEST_OBJ_DIR:=$(PROJ_ROOT_DIR)/obj/$(TEST_NAME)
 TEST_OBJ:=$(TEST_OBJ_DIR)/$(TEST_OBJ_NAME)
@@ -33,9 +33,9 @@ endef
 LD:= gcc
 
 ########## LINKER FLAGS ##########
-#LIBRARY_DIR= /usr/lib/x86_64-linux-gnu/
-DEP_LIBS = -lcheck -lsubunit -pthread -lrt -lm
-
+LIBRARY_DIR= $(PROJ_ROOT_DIR)/libs
+LIBRARY:=linked_list
+DEP_LIBS = -L$(LIBRARY_DIR) -l$(LIBRARY) -lcheck -lsubunit -pthread -lrt -lm
 									
 #DEP_LIBS = -lcheck
 
@@ -56,7 +56,7 @@ all:
 test: 
 	$(MAKE) -C $(SRC_DIR)/$(MODULE_NAME)
 	$(MAKE) -C $(SRC_DIR)/$(TEST_NAME)
-	$(LD) $(TARGET) $(TEST_OBJ) $(LDFLAGS) -o $(TEST_TARGET)
+	$(LD) $(TEST_OBJ) $(LDFLAGS) -o $(TEST_TARGET)
 
 build_and_run:
 	$(MAKE) test

@@ -6,15 +6,19 @@
 BUILD_TYPE = $(RELEASE)
 #BUILD_TYPE = $(DEBUG)
 MODULE_NAME:= linked_list
-TARGET_NAME:= $(MODULE_NAME).o
+OBJ_NAME:=$(MODULE_NAME).o
+TARGET_NAME:= $(MODULE_NAME).a
 
 CC:= gcc
 
 PROJ_ROOT_DIR:= ../..
-OBJ_DIR:= $(PROJ_ROOT_DIR)/obj
+OBJ_DIR:= $(PROJ_ROOT_DIR)/obj/$(MODULE_NAME)
+OBJ:=$(OBJ_DIR)/$(OBJ_NAME)
+
 INC_DIR:= $(PROJ_ROOT_DIR)/include/$(MODULE_NAME)
 
-TARGET_DIR:= $(OBJ_DIR)/$(MODULE_NAME)
+TARGET_NAME:= lib$(MODULE_NAME).a
+TARGET_DIR:= $(PROJ_ROOT_DIR)/libs
 TARGET:=$(TARGET_DIR)/$(TARGET_NAME)
 
 SRC:=./$(MODULE_NAME).c
@@ -49,7 +53,10 @@ CCFLAGS = $(STDFLAG) $(BUILD_TYPE) $(DEFINES) $(WARN) $(INC)
 
 ########## CC FLAGS END ##########
 
-$(TARGET): $(SRC)
+$(TARGET): $(OBJ)
+	 ar rcs $@ $^	
+
+$(OBJ): $(SRC)
 	$(CC) $(CCFLAGS) -c $^ -o $@ 
 
 # with looking to headers we are keeping our dependency updated in case of any added include to any header
@@ -62,6 +69,7 @@ include $(DEP)
 build_dependencies: $(DEP)
 
 build_dir:
+	mkdir -p $(OBJ_DIR)
 	mkdir -p $(TARGET_DIR)
 
 clean:
